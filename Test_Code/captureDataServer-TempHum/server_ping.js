@@ -30,16 +30,24 @@ app.post("/ping", function (req, res) {
     req.body.time = new Date().getTime();
 
     // Inserting the ping message data into the "ping_messages" collection in MongoDB
-    db.collection("ping_messages").insert(req.body, function(result, err){
+    db.collection("ping_messages").insert(req.body, function(err, result){
         if (err) {
             console.error("Error inserting ping message into the database:", err);
             res.status(500).send("Internal Server Error");
         } else {
-            // Sending a response indicating success
-            res.send("Ping message received and stored!");
+            // Check if any documents were inserted
+            if (result && result.result && result.result.ok === 1 && result.result.n === 1) {
+                // Sending a response indicating success
+                res.send("Ping message received and stored!");
+            } else {
+                console.error("Error: No documents inserted");
+                res.status(500).send("Internal Server Error");
+                
+            }
         }
     });
 });
+
 
 // Starting the server and logging the information
 app.listen(port, () => {
