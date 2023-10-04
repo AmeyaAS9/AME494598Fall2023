@@ -4,7 +4,7 @@
 const char* ssid = "Galaxy S22D9EC";
 const char* password = "12345678";
 
-const char* ec2Server = "http://52.36.190.202:1234/";
+const char* ec2Server = "http://52.36.190.202:1234";
 const int ec2Port = 1234; // Assuming your EC2 server is running an HTTP server
 
 void setup() {
@@ -20,18 +20,20 @@ void setup() {
 }
 
 void loop() {
+  String payload = "{\"message\": \"TEST MESSAGE\"}";
+
   // Perform the "ping" by sending an HTTP GET request
-  pingEc2Server();
+  pingEc2Server(payload);
 
   // Wait for 2 seconds before the next ping
   delay(2000);
 }
 
-void pingEc2Server() {
+void pingEc2Server(String payload) {
   HTTPClient http;
 
   // Construct the URL for the HTTP GET request
-  String url = "http://" + String(ec2Server) + "/ping";
+  String url = String(ec2Server) + "/ping";
   
   Serial.print("Sending HTTP GET request to: ");
   Serial.println(url);
@@ -39,17 +41,25 @@ void pingEc2Server() {
   // Specify the URL
   http.begin(url);
 
-  // Send GET request
-  int httpResponseCode = http.GET();
+   // Set content type header
+  http.addHeader("Content-Type", "application/json");
+
+  // Send POST request with payload
+  int httpResponseCode = http.POST(payload);
+
+  // // Send GET request
+  // int httpResponseCode = http.GET();
 
   // Check for a successful response
   if (httpResponseCode > 0) {
-    Serial.print("HTTP GET request successful. Response code: ");
+    Serial.print("HTTP POST request successful. Response code: ");
     Serial.println(httpResponseCode);
 
-    // You can parse the response or perform other actions here
+    // Print the response payload
+    String response = http.getString();
+    Serial.println("Response payload: " + response);
   } else {
-    Serial.print("HTTP GET request failed. Response code: ");
+    Serial.print("HTTP POST request failed. Response code: ");
     Serial.println(httpResponseCode);
   }
 
