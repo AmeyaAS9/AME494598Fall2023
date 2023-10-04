@@ -1,11 +1,11 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "your_wifi_ssid";
-const char* password = "your_wifi_password";
+const char* ssid = "Galaxy S22D9EC";
+const char* password = "12345678";
 
-const char* ec2Server = "your_ec2_server_ip_or_domain";
-const int ec2Port = 80; // Assuming your EC2 server is running an HTTP server
+const char* ec2Server = "http://52.36.190.202:1234/";
+const int ec2Port = 1234; // Assuming your EC2 server is running an HTTP server
 
 void setup() {
   Serial.begin(115200);
@@ -17,13 +17,14 @@ void setup() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
-
-  // Perform the "ping" by sending an HTTP GET request
-  pingEc2Server();
 }
 
 void loop() {
-  // The loop can be empty as we only want to perform the "ping" once
+  // Perform the "ping" by sending an HTTP GET request
+  pingEc2Server();
+
+  // Wait for 2 seconds before the next ping
+  delay(2000);
 }
 
 void pingEc2Server() {
@@ -35,8 +36,11 @@ void pingEc2Server() {
   Serial.print("Sending HTTP GET request to: ");
   Serial.println(url);
 
+  // Specify the URL
+  http.begin(url);
+
   // Send GET request
-  int httpResponseCode = http.GET(url);
+  int httpResponseCode = http.GET();
 
   // Check for a successful response
   if (httpResponseCode > 0) {
