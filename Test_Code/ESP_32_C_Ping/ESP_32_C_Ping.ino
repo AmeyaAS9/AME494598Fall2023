@@ -4,8 +4,8 @@
 const char* ssid = "Galaxy S22D9EC";
 const char* password = "12345678";
 
-const char* ec2Server = "http://52.36.190.202:1234";
-const int ec2Port = 1234; // Assuming your EC2 server is running an HTTP server
+const char* ec2Server = "http://3.83.139.19:8080";
+const int ec2Port = 8080; // Assuming your EC2 server is running an HTTP server
 
 void setup() {
   Serial.begin(115200);
@@ -47,8 +47,8 @@ void pingEc2Server(String payload) {
   // Send POST request with payload
   int httpResponseCode = http.POST(payload);
 
-  // // Send GET request
-  // int httpResponseCode = http.GET();
+  // Send GET request
+  // int httpResponseCode = http.GET(payload);
 
   // Check for a successful response
   if (httpResponseCode > 0) {
