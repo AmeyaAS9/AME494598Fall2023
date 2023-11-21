@@ -1,0 +1,111 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.6.8/c3.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.6.8/c3.min.js"></script>
+
+    <script src='asyncReq.js'></script>
+    <script>
+        var chart;
+        var lastAddedTS = 0;
+
+        function getDataFromServer() {
+            var urlPlant1 = "./getValuePlant1";
+            var urlPlant2 = "./getValuePlant2";
+
+            var callbackPlant1 = function (data) {
+                updateChart(data, "Plant 1");
+            };
+
+            var callbackPlant2 = function (data) {
+                updateChart(data, "Plant 2");
+            };
+
+            loadFile(urlPlant1, callbackPlant1);
+            loadFile(urlPlant2, callbackPlant2);
+        }
+
+        function updateChart(data, plantName) {
+            var obj = JSON.parse(data);
+            var columns = [["x"], ["Temperature " + plantName], ["Humidity " + plantName]];
+
+            for (var i = 0; i < obj.length; i++) {
+                var timestamp = parseInt(obj[i].time);
+                if (timestamp > lastAddedTS) {
+                    columns[0].push(getTSInFormat(timestamp));
+                    columns[1].push(obj[i].t || 0);
+                    columns[2].push(obj[i].h || 0);
+                    lastAddedTS = timestamp;
+                }
+            }
+
+            chart.flow({
+                columns: columns
+            });
+        }
+
+        function getTSInFormat(t) {
+            var x = new Date(t);
+            return x.getFullYear() + "-" + x.getMonth() + "-" + x.getDate() + "T" + x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
+        }
+
+        function start() {
+            var urlPlant1 = "./getValuePlant1";
+            var urlPlant2 = "./getValuePlant2";
+
+            var callbackPlant1 = function (dataPlant1) {
+                var callbackPlant2 = function (dataPlant2) {
+                    var objPlant1 = JSON.parse(dataPlant1);
+                    var objPlant2 = JSON.parse(dataPlant2);
+
+                    var columns = [["x"], ["Temperature Plant 1"], ["Humidity Plant 1"], ["Temperature Plant 2"], ["Humidity Plant 2"]];
+
+                    for (var i = 0; i < objPlant1.length; i++) {
+                        var timestampPlant1 = parseInt(objPlant1[i].time);
+                        columns[0].push(getTSInFormat(timestampPlant1));
+                        columns[1].push(objPlant1[i].t || 0);
+                        columns[2].push(objPlant1[i].h || 0);
+                        lastAddedTS = timestampPlant1;
+                    }
+
+                    for (var i = 0; i < objPlant2.length; i++) {
+                        var timestampPlant2 = parseInt(objPlant2[i].time);
+                        columns[3].push(getTSInFormat(timestampPlant2));
+                        columns[4].push(objPlant2[i].t || 0);
+                        columns[5].push(objPlant2[i].h || 0);
+                        lastAddedTS = timestampPlant2;
+                    }
+
+                    chart = c3.generate({
+                        bindto: '#data',
+                        data: {
+                            x: 'x',
+                            xFormat: '%Y-%m-%dT%H:%M:%S',
+                            columns: columns
+                        },
+                        axis: {
+                            x: {
+                                type: 'timeseries',
+                                tick: {
+                                    format: '%H:%M:%S,%Y-%m-%d',
+                                }
+                            }
+                        }
+                    });
+                };
+
+                loadFile(urlPlant2, callbackPlant2);
+            };
+
+            loadFile(urlPlant1, callbackPlant1);
+
+            setInterval(getDataFromServer, 1000);
+        }
+    </script>
+</head>
+
+<body style='text-align:center; font-family:Helvetica' onload='start()'>
+    <h1> Weather Ticker </h1>
+    <div id='data'></div>
+</body>
+</html>
