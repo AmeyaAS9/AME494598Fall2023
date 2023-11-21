@@ -20,14 +20,14 @@
             line-height: 1.5;
         }
         .code-box {
-            border: 1px solid #333;
+            border: 1px solid #000000;
             padding: 10px;
-            background-color: #f5f5f5;
+            background-color: #eafedc;
             display: inline-block; /* Ensures that rectangles only wrap around code elements */
         }
         /* CSS for images */
         .image {
-            max-width: 70%;
+            max-width: 80%;
         }
         /* CSS for figure captions */
         figcaption {
@@ -37,48 +37,53 @@
     </style>
 </head>
 <body>
-
     <header>
         <h1><u><center>AWS Iot Server and Database Tutorial</center></u></h1>
     </header>
     <section>
         <h2><u>Introduction</u></h2>
-        <p>Briefly introduce Arduino and the purpose of the tutorial. Explain the importance of setting up the Arduino IDE correctly.</p>
+        <p>Join me on an exciting AWS IoT tutorial journey! Dive into the heart of IoT with AWS services. 
+            Connect devices seamlessly, process data intelligently, and build scalable solutions. 
+            Uncover the intricacies of AWS IoT, empowering you to create secure and innovative IoT projects. 
+            Let's craft the future together!</p>
     </section>
 
     <ul class="tabs">
-        <li><a href="#setup-instance">Configure an AWS EC2 instance</a></li>
-        <li><a href="#configure-security">Configure Security Settings</a></li>
-        <li><a href="#Activate-mongodb">Setup and Activate MongoDB</a></li>
-        <li><a href="#Configure-devices">Configure the Sensor and Controller</a></li>
+        <li><a href="#Setup-instance">Configure an AWS EC2 instance</a></li>
+        <li><a href="#Setup-mongodb">Install and Setup required software packages</a></li>
+        <li><a href="#Configure-devices">Configure the Sensor and Server</a></li>
         <li><a href="#Connect-devices">Connect and Save to Database</a></li>
         <li><a href="#Things-to-remember">Things to remember</a></li>
     </ul>
 
-    <div class="tab-content" id="setup-instance">
-        <h2>1. Set up an AWS EC2 instance</h2>
-        <p><strong>Step 1: Install Node.js and MongoDB</strong></p>
-        <p>Execute the following command to download and run a shell script that installs Node.js and MongoDB on your EC2 instance:</p>
+    <div class="tab-content" id="Setup-instance">
+        <h2>1. Setting up an AWS EC2 Instance</h2>
+        <p>Step 1: Login to the AWS Account</p>
+        <p>Step 2: In the AWS Management Console, find the "Services" dropdown and select "EC2" under the "Compute" section.</p>
+        <p>Step 3: Launch an Instance and configure your machine requirements. Select and create a request.  </p>
+        <p>Step 4: Configure instance details, including the number of instances, network settings and Security rules. You can use the default settings for many cases.</p>
+        <p>Step 5: Once the instance is launched, Check the system directory for your awareness.</p>
+    </div>
+
+    <div class="tab-content" id="Setup-mongodb">
+        <h2>2. Install, Upgrade software packages. </h2>
+        <p>Step 1: Execute the following command to download and run a shell script that installs Node.js and MongoDB on your EC2 instance:</p>
         <pre><code class="code-box">curl -s https://gist.githubusercontent.com/tejaswigowda/f289e9bff13d152876e8d4b3281142f8/raw/df37df2e16a3166e686357a045751a7c18bbeebe/installNodeMongoUbuntu16.04.sh | bash</code></pre>
         
-        <p><strong>Step 2: Upgrade Node.js to the Latest Version</strong></p>
-        <p>Upgrade Node.js to the latest version using these commands:</p>
+        <p>Step 2: Upgrade Node.js to the latest version using these commands:</p>
         <pre><code class="code-box">sudo npm install -g n</code></pre>
         <pre><code class="code-box">sudo n latest</code></pre>
-            
-        <p><strong>Step 3: Verify Node.js Version</strong></p>
-        <p>Confirm the Node.js version by running:</p>
-        <pre><code class="code-box">node -v</code></pre>
-    </div>
 
-    <div class="tab-content" id="configure-security">
-        <h2>Configure Security Rules</h2>
-        <p><strong>Step 4: Update Inbound Security Rules</strong></p>
-        <p>Modify the inbound security rules for your EC2 instance to allow external access to your EC2 instance on the specified ports, making your services accessible.</p>
-    </div>
+        <p>Step 3: Configure MongoDB for External Access</strong></p>
+        <p>Open the MongoDB configuration file for editing:</p>
+        <pre><code class="code-box">sudo nano /etc/mongod.conf</code></pre>
+        <p>Change the bindIP in the configuration file to 0.0.0.0 to accept data from your IP address, and ensure it listens on port 8080 as well. Save the changes and exit the editor.</p>
 
-    <div class="tab-content" id="start-mongodb">
-        <h2>Start MongoDB</h2>
+        <p>Step 4: Configure instance details, including the number of instances, network settings and Security rules. You can use the default settings for many cases.</p>
+        <p>Step 5: Once the instance is launched, Check the system directory for your awareness.</p>
+        
+        
+        
         <p><strong>Step 5: Start MongoDB Server</strong></p>
         <p>Initiate the MongoDB server with the following command:</p>
         <pre><code class="code-box">sudo service mongod start</code></pre>
