@@ -76,7 +76,7 @@ app.get("/setValue", function (req, res) {
     level_tank2: val_level2,
     heater_status: stat_heat,
     pump1_status: stat_pump1,
-    stat_pump2: stat_pump2,
+    pump2_status: stat_pump2,
 		time: val_timestamp,
 	}
 	db.collection("dataPlant").insert(dataObj, function(err,result){
