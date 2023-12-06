@@ -32,8 +32,8 @@
 					allData.push({ time: timestamp, temperature: obj[i].t || 0, humidity: obj[i].h || 0 });
 				}
 
-				// console.log("================== Fetched Data " + obj + "========================================================");
-				// console.log("================== Data after getServerFromServer is called - " + columns + "======================");
+				console.log("================== Fetched Data " + obj + "========================================================");
+				console.log("================== Data after getServerFromServer is called - " + columns + "======================");
 				chart = c3.generate({
 					bindto: '#data',
 					data: {
