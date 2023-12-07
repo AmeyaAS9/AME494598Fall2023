@@ -32,24 +32,6 @@
 					allData.push({ time: timestamp, temperature: obj[i].t || 0, humidity: obj[i].h || 0 });
 				}
 
-				console.log("================== Fetched Data " + obj + "========================================================");
-				console.log("================== Data after getServerFromServer is called - " + columns + "======================");
-				chart = c3.generate({
-					bindto: '#data',
-					data: {
-						x: 'x',
-						xFormat: '%Y-%m-%dT%H:%M:%S',
-						columns: columns
-					},
-					axis: {
-						x: {
-							type: 'timeseries',
-							tick: {
-								format: getTickFormat(selectedDuration),
-							}
-						}
-					}
-				});
 				chart.destroy();
 				filterDataAndDrawChart();
 			};
@@ -81,9 +63,7 @@
 
 			var averageTemperature = totalTemperature / filteredData.length;
 			var averageHumidity = totalHumidity / filteredData.length;
-			console.log("================== All Data " + allData + "========================================================");
-			console.log("================== Data after getServerFromServer is called - " + columns + "======================");
-			// Update the chart
+
 			chart = c3.generate({
 				bindto: '#data',
 				data: {
@@ -161,7 +141,7 @@
 			};
 			loadFile(url, callback);
 
-			setInterval("getDataFromServer()", 1000);
+			setInterval("getDataFromServer()", 5000);
 		}
 	</script>
 </head>
